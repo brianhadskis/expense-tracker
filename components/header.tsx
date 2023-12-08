@@ -6,7 +6,7 @@ import Navbar from "./navbar";
 
 export default function Header() {
   return (
-    <header className="fixed w-full bg-slate-700 text-slate-100">
+    <header className="fixed w-full bg-teal-900 text-slate-100">
       <div className="relative flex flex-col">
         <div className="flex justify-between mr-8 ml-8">
           <h1 className="text-3xl font-bold m-4">Expense Tracker</h1>
