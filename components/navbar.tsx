@@ -7,73 +7,37 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
+import { NAVIGATION } from "@/config";
+import { usePathname } from "next/navigation";
+import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
+  const pathName = usePathname();
   return (
-    <NavigationMenu className="flex gap-5 h-[3rem] list-none">
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link href="/dashboard" className="flex justify-center items-center">
-            Dashboard
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link href="/reports" className="flex justify-center items-center">
-            Reports
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link
-            href="/transactions"
-            className="flex justify-center items-center"
-          >
-            Transactions
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link href="/bills" className="flex justify-center items-center">
-            Bills
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link href="/budgets" className="flex justify-center items-center">
-            Budgets
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="flex justify-center h-full items-center">
-        <NavigationMenuLink
-          className="h-2/3 rounded-full text-gray-600 hover:text-gray-800 hover:bg-slate-100 p-3"
-          asChild
-        >
-          <Link href="/goals" className="flex justify-center items-center">
-            Goals
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
+    <NavigationMenu className="list-none gap-1">
+      {NAVIGATION.map((nav) => {
+        const isActive = nav.href === pathName;
+        const NavIcon = nav.icon;
+        return (
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link
+                key={nav.name}
+                href={nav.href}
+                className={buttonVariants({
+                  variant: isActive ? "secondary" : "ghost",
+                  size: "default",
+                  className: cn("gap-1.5"),
+                })}
+              >
+                <NavIcon />
+                <p className="hidden lg:flex">{nav.name}</p>
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        );
+      })}
     </NavigationMenu>
   );
 }
