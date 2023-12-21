@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
@@ -12,12 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { LogOut, Settings } from "lucide-react";
+import UserAvatar from "./UserAvatar";
 
 export default async function AccountMenu({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"ghost"}>{user.name}</Button>
+        <Button variant={"ghost"}>
+          <UserAvatar user={user} />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
