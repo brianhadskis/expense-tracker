@@ -20,10 +20,9 @@ export default function Navbar() {
         const isActive = nav.href === pathName;
         const NavIcon = nav.icon;
         return (
-          <NavigationMenuItem>
+          <NavigationMenuItem key={nav.name}>
             <NavigationMenuLink asChild>
               <Link
-                key={nav.name}
                 href={nav.href}
                 className={buttonVariants({
                   variant: isActive ? "secondary" : "ghost",
