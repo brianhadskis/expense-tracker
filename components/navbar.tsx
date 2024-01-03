@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 export default function Navbar() {
   const pathName = usePathname();
   return (
-    <NavigationMenu className="list-none gap-1">
+    <NavigationMenu className="list-none gap-1 bg-white/75 dark:bg-neutral-800/75 sm:bg-transparent sm:dark:bg-transparent">
       {NAVIGATION.map((nav) => {
         const isActive = nav.href === pathName;
         const NavIcon = nav.icon;

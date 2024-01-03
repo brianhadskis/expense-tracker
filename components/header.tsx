@@ -10,7 +10,7 @@ export default async function Header() {
   const session = await getServerSession();
   const user = session?.user;
   return (
-    <header className="fixed top-0 w-full bg-white/75 backdrop-blur-lg transition-all text-teal-800 border-b border-slate-300">
+    <header className="fixed top-0 w-full bg-white/75 dark:bg-neutral-800/75 backdrop-blur-lg transition-all text-teal-800 dark:text-teal-500 border-b border-neutral-300 dark:border-neutral-600">
       <div className="flex items-center justify-between mx-auto">
         <div className="pl-5 w-35 flex flex-col">
           <h1 className="text-lg font-extrabold lg:text-xl text-center">
