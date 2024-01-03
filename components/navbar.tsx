@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 export default function Navbar() {
   const pathName = usePathname();
   return (
-    <NavigationMenu className="list-none gap-1">
+    <NavigationMenu className="list-none gap-1 bg-background/75 sm:bg-transparent sm:dark:bg-transparent">
       {NAVIGATION.map((nav) => {
         const isActive = nav.href === pathName;
         const NavIcon = nav.icon;
@@ -30,7 +30,7 @@ export default function Navbar() {
                   className: cn("gap-1.5"),
                 })}
               >
-                <NavIcon />
+                <NavIcon className="text-primary" />
                 <p className="hidden lg:flex">{nav.name}</p>
               </Link>
             </NavigationMenuLink>
