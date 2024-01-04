@@ -14,10 +14,10 @@ export async function getCategories(user: User) {
   return categories;
 }
 
-export async function getCategoriesByGroup(group: Group) {
+export async function getCategoriesByGroupId(groupId: string) {
   const categories = await prisma.category.findMany({
     where: {
-      groupId: group.id,
+      groupId,
     },
   });
 

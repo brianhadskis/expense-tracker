@@ -14,10 +14,10 @@ export async function getSubCategories(user: User) {
   return subcategories;
 }
 
-export async function getSubCategoriesByCategory(category: Category) {
+export async function getSubcategoriesByCategoryId(categoryId: string) {
   const categories = await prisma.subcategory.findMany({
     where: {
-      categoryId: category.id,
+      categoryId,
     },
   });
 
