@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import type { Transaction } from "@prisma/client";
+import { format } from "date-fns";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -23,13 +24,34 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     header: "Amount",
     accessorKey: "amount",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div>{formatted}</div>;
+    },
   },
   {
     header: "Date",
     accessorKey: "date",
+    cell: ({ row }) => {
+      const date = row.getValue("date") as Date;
+      const formatted = format(date, "MMMM d, yyyy");
+
+      return <div>{formatted}</div>;
+    },
   },
   {
     header: "Time",
     accessorKey: "time",
+    cell: ({ row }) => {
+      const time = row.getValue("time") as Date;
+      const formatted = format(time, "h:mm:ss a");
+
+      return <div>{formatted}</div>;
+    },
   },
 ];
