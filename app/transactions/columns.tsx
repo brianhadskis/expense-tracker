@@ -44,18 +44,4 @@ export const columns: ColumnDef<Transaction>[] = [
       return <div>{formatted}</div>;
     },
   },
-  {
-    header: "Time",
-    accessorKey: "time",
-    cell: ({ row }) => {
-      const time = row.getValue("date") as Date;
-      const isTime = row.getValue("time") as Boolean;
-      if (!isTime) {
-        return <div>N/A</div>;
-      }
-      const formatted = format(time, "h:mm:ss a");
-
-      return <div>{formatted}</div>;
-    },
-  },
 ];
