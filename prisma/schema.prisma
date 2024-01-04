@@ -106,8 +106,8 @@ model Transaction {
   user          User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId        String
   modified      DateTime     @updatedAt
-  date          DateTime     @db.Date
-  time          DateTime     @db.Time
+  date          DateTime     @db.DateTime
+  time          Boolean      @default(false)
   description   String?
   amount        Decimal      @db.Decimal(10, 2)
   subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
