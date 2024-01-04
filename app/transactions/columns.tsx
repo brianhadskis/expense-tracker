@@ -51,7 +51,7 @@ export const columns: ColumnDef<Transaction>[] = [
       const time = row.getValue("date") as Date;
       const isTime = row.getValue("time") as Boolean;
       if (!isTime) {
-        return <div>-</div>;
+        return <div>N/A</div>;
       }
       const formatted = format(time, "h:mm:ss a");
 
