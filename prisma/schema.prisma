@@ -11,18 +11,20 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String   @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?  @db.Text
   session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -35,6 +37,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model User {
@@ -52,12 +56,16 @@ model User {
   Budget        Budget[]
   Bill          Bill[]
   Goal          Goal[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
 }
@@ -70,6 +78,8 @@ model Group {
   description String?
   cashflow    Cashflow
   categories  Category[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 enum Cashflow {
@@ -87,6 +97,8 @@ model Category {
   group         Group         @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Restrict)
   groupId       String
   subcategories Subcategory[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Subcategory {
@@ -99,26 +111,29 @@ model Subcategory {
   categoryId  String
   Transaction Transaction[]
   Bill        Bill[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 model Transaction {
-  id            String       @id @default(cuid())
-  user          User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId        String
-  modified      DateTime     @updatedAt
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId String
+
   date          DateTime     @db.DateTime
-  time          Boolean      @default(false)
   description   String?
   amount        Decimal      @db.Decimal(10, 2)
   subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
   subcategoryId String
   BillPayment   BillPayment?
   GoalPayment   GoalAction?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Budget {
-  year      Int    @id @db.Year
-  user      User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  year      Int      @id @db.Year
+  user      User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId    String
   january   Json
   february  Json
@@ -132,6 +147,8 @@ model Budget {
   october   Json
   november  Json
   december  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, year])
 }
@@ -153,6 +170,8 @@ model Bill {
   isSubscription Boolean       @default(false)
   isActive       Boolean       @default(true)
   BillPayment    BillPayment[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 enum BillFrequency {
@@ -168,6 +187,8 @@ model BillPayment {
   billId        String
   Transaction   Transaction @relation(fields: [transactionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   transactionId String      @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Goal {
@@ -181,6 +202,8 @@ model Goal {
   startDate   DateTime     @db.Date
   endDate     DateTime?    @db.Date
   GoalPayment GoalAction[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model GoalAction {
@@ -189,4 +212,6 @@ model GoalAction {
   goalId        String
   Transaction   Transaction @relation(fields: [transactionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   transactionId String      @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
