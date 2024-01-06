@@ -1,6 +1,9 @@
 "use client";
 
-import { transactionFormSchema } from "@/validators/transactions";
+import {
+  TransactionFormSchemaType,
+  transactionFormSchema,
+} from "@/validators/transactions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
@@ -41,6 +44,7 @@ type formData = z.infer<typeof transactionFormSchema>;
 
 interface TransactionFormProps {
   user: User;
+  update?: TransactionFormSchemaType;
 }
 
 export function TransactionForm(props: TransactionFormProps) {
@@ -51,12 +55,12 @@ export function TransactionForm(props: TransactionFormProps) {
   const form = useForm<formData>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
-      amount: 0,
-      date: new Date(),
-      description: "",
-      groupId: "",
-      categoryId: "",
-      subcategoryId: "",
+      amount: props.update?.amount ?? 0,
+      date: props.update?.date ?? new Date(),
+      description: props.update?.description ?? "",
+      groupId: props.update?.groupId ?? "",
+      categoryId: props.update?.categoryId ?? "",
+      subcategoryId: props.update?.subcategoryId ?? "",
     },
   });
 
