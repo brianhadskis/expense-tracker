@@ -4,6 +4,7 @@ import { User } from "next-auth";
 import prisma from "@/lib/db";
 import type { Subcategory, Transaction } from "@prisma/client";
 import { transactionFormSchema } from "@/validators/transactions";
+import { revalidatePath } from "next/cache";
 import type { TransactionFormSchemaType } from "@/validators/transactions";
 
 export async function getTransactions(user: User) {
@@ -41,6 +42,8 @@ export async function addTransaction(
       userId: user.id,
     },
   });
+
+  revalidatePath("/transactions");
 
   return transaction;
 }

@@ -87,6 +87,7 @@ export function TransactionForm(props: TransactionFormProps) {
   function onSubmit(data: formData) {
     console.log(data, props.user);
     addTransaction(data, props.user);
+    form.reset();
   }
 
   return (
@@ -97,7 +98,7 @@ export function TransactionForm(props: TransactionFormProps) {
           name="groupId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Group</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -122,7 +123,7 @@ export function TransactionForm(props: TransactionFormProps) {
           name="categoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Category</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -147,7 +148,7 @@ export function TransactionForm(props: TransactionFormProps) {
           name="subcategoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Subcategory</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
