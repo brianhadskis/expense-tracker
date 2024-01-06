@@ -1,6 +1,6 @@
 "use client";
 
-import { transactionSchema } from "@/app/transactions/page";
+import { transactionFormSchema } from "@/validators/transactions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
@@ -36,70 +36,51 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 
+type formData = z.infer<typeof transactionFormSchema>;
+
 interface TransactionFormProps {
   user: User;
 }
 
 export function TransactionForm(props: TransactionFormProps) {
-  const [groupId, setGroupId] = useState<string>();
-  const [categoryId, setCategoryId] = useState<string>();
-  const [subcategoryId, setSubcategoryId] = useState<string>();
-
+  const [groups, setGroups] = useState<Group[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
 
-  //const groups = await getGroups(props.user);
-  //   let groups = new Array<Group>();
-  //   let categories = new Array<Category>();
-  //   let subcategories = new Array<Subcategory>();
-
-  useEffect(() => {
-    (async () => {
-      setGroups(await getGroups(props.user));
-    })();
-  }, [props.user]);
-
-  useEffect(() => {
-    (async () => {
-      if (!groupId) {
-        return;
-      }
-      setCategories(await getCategoriesByGroupId(groupId));
-      console.log(categories);
-    })();
-  }, [groupId]);
-
-  useEffect(() => {
-    (async () => {
-      if (!categoryId) {
-        return;
-      }
-      setSubcategories(await getSubcategoriesByCategoryId(categoryId));
-    })();
-  }, [categoryId]);
-
-  const form = useForm<z.infer<typeof transactionSchema>>({
-    resolver: zodResolver(transactionSchema),
+  const form = useForm<formData>({
+    resolver: zodResolver(transactionFormSchema),
     defaultValues: {
       amount: 0,
       date: new Date(),
-      time: false,
       description: "",
-      subcategory: {
-        name: "",
-        category: {
-          name: "",
-          group: {
-            name: "",
-          },
-        },
-      },
+      groupId: "",
+      categoryId: "",
+      subcategoryId: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof transactionSchema>) {
-    console.log(values);
+  useEffect(() => {
+    getGroups(props.user).then((groups) => {
+      setGroups(groups);
+    });
+  }, [props.user]);
+
+  useEffect(() => {
+    getCategoriesByGroupId(form.getValues("groupId")).then((categories) => {
+      setCategories(categories);
+    });
+  }, [form.getValues("groupId")]);
+
+  useEffect(() => {
+    getSubcategoriesByCategoryId(form.getValues("categoryId")).then(
+      (subcategories) => {
+        setSubcategories(subcategories);
+      }
+    );
+  }, [form.getValues("categoryId")]);
+
+  function onSubmit(data: formData) {
+    console.log(data);
   }
 
   return (
@@ -107,17 +88,11 @@ export function TransactionForm(props: TransactionFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="subcategory.category.group"
+          name="groupId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Group</FormLabel>
-              <Select
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  setGroupId(value);
-                }}
-                defaultValue={field.value.id}
-              >
+              <FormLabel>Email</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a group" />
@@ -131,28 +106,18 @@ export function TransactionForm(props: TransactionFormProps) {
                   ))}
                 </SelectContent>
               </Select>
-
-              <FormDescription>
-                This is the group of your transaction.
-              </FormDescription>
+              <FormDescription>Group for transaction.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="subcategory.category"
+          name="categoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  setCategoryId(value);
-                }}
-                defaultValue={field.value.id}
-                value={field.value.id}
-              >
+              <FormLabel>Email</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
@@ -166,27 +131,18 @@ export function TransactionForm(props: TransactionFormProps) {
                   ))}
                 </SelectContent>
               </Select>
-
-              <FormDescription>
-                This is the category of your transaction.
-              </FormDescription>
+              <FormDescription>Category for transaction.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="subcategory"
+          name="subcategoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subcategory</FormLabel>
-              <Select
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  setSubcategoryId(value);
-                }}
-                defaultValue={field.value.id}
-              >
+              <FormLabel>Email</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a subcategory" />
@@ -200,10 +156,7 @@ export function TransactionForm(props: TransactionFormProps) {
                   ))}
                 </SelectContent>
               </Select>
-
-              <FormDescription>
-                This is the subcategory of your transaction.
-              </FormDescription>
+              <FormDescription>Subcategory for transaction.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -215,11 +168,9 @@ export function TransactionForm(props: TransactionFormProps) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Enter a description" {...field} />
+                <Input placeholder="Enter a description..." {...field} />
               </FormControl>
-              <FormDescription>
-                This is the description of your transaction.
-              </FormDescription>
+              <FormDescription>Description of the transaction</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -233,9 +184,7 @@ export function TransactionForm(props: TransactionFormProps) {
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the amount of your transaction.
-              </FormDescription>
+              <FormDescription>Amount of the transaction</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -244,8 +193,8 @@ export function TransactionForm(props: TransactionFormProps) {
           control={form.control}
           name="date"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
+            <FormItem>
+              <FormLabel>Amount</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -277,12 +226,11 @@ export function TransactionForm(props: TransactionFormProps) {
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>The date of your transaction.</FormDescription>
+              <FormDescription>Date of the transaction</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* Date and Time here */}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
