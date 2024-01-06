@@ -9,3 +9,5 @@ export const transactionFormSchema = z.object({
   categoryId: z.string(),
   subcategoryId: z.string(),
 });
+
+export type TransactionFormSchemaType = z.infer<typeof transactionFormSchema>;

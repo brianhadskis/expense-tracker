@@ -35,6 +35,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
+import { addTransaction } from "@/app/actions/transactions";
 
 type formData = z.infer<typeof transactionFormSchema>;
 
@@ -80,7 +81,8 @@ export function TransactionForm(props: TransactionFormProps) {
   }, [form.getValues("categoryId")]);
 
   function onSubmit(data: formData) {
-    console.log(data);
+    console.log(data, props.user);
+    addTransaction(data, props.user);
   }
 
   return (
