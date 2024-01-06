@@ -1,6 +1,6 @@
 import { columns } from "@/app/transactions/columns";
 import { authConfig } from "@/auth";
-import { TransactionForm } from "@/components/TransactionForm";
+import TransactionActions from "@/components/TransactionActions";
 import DataTable from "@/components/ui/data-table";
 import { getServerSession } from "next-auth";
 import { getTransactions } from "../actions/transactions";
@@ -18,7 +18,7 @@ export default async function Page() {
   return (
     <main className=" mt-[5rem]">
       {/*@ts-expect-error*/}
-      <TransactionForm user={user} />
+      <TransactionActions user={user} />
       <DataTable columns={columns} data={transactions} />
     </main>
   );
